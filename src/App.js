@@ -1,25 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import MyNavbar from "./Components/MyNavbar";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import CitySelector from "./Components/CitySelector";
+import CityDetails from "./Components/CityDetails";
+import { Component } from "react";
+import Footer from "./Components/Footer";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    cityName: "Napoli",
+  };
+
+  changeCityName = (newCity) => {
+    this.setState({
+      cityName: newCity,
+    });
+  };
+
+  render() {
+    return (
+      <div className="d-flex flex-column vh-100">
+        <header>
+          <MyNavbar />
+        </header>
+        <main className="flex-grow-1 bg-warning">
+          <Container className="my-5">
+            <Row className="justify-content-center">
+              <Col xs={12} md={3}>
+                <CitySelector
+                  cityName={this.state.cityName}
+                  changeCityName={this.changeCityName}
+                />
+              </Col>
+            </Row>
+            <Row className="justify-content-center mt-5">
+              <Col xs={12} md={3}>
+                <CityDetails cityName={this.state.cityName} />
+              </Col>
+            </Row>
+          </Container>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 }
 
 export default App;
