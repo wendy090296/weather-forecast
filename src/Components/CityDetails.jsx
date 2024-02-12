@@ -1,19 +1,23 @@
-import { Component } from "react";
+// import { Component } from "react";
 import Card from "react-bootstrap/Card";
+import { useState, useEffect } from "react";
 
-class CityDetails extends Component {
-  state = {
-    weatherObj: [],
-  };
+const CityDetails = (props) => {
+  // state = {
+  //   weatherObj: [],
+  // };
 
-  componentDidMount() {
-    this.fetchWeatherForecast();
-  }
+  const [weather, setWeather] = useState([]);
 
-  fetchWeatherForecast = () => {
+  useEffect(() => {
+    fetchWeatherForecast();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchWeatherForecast = () => {
     fetch(
       "https://api.openweathermap.org/data/2.5/weather?q=" +
-        this.props.cityName +
+        props.cityName +
         ",IT&appid=0c1aa2a41f772d632fe090a439af5e0b&units=metric"
     )
       .then((response) => {
@@ -25,65 +29,51 @@ class CityDetails extends Component {
       })
       .then((data) => {
         console.log(data);
-        this.setState({
-          weatherObj: data,
-        });
+        // this.setState({
+        //   weatherObj: data,
+        // });
+        setWeather(data);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.cityName !== this.props.cityName) {
-      this.fetchWeatherForecast();
-    }
-  }
+  useEffect(() => {
+    // eslint-disable-next-line no-undef
+    fetchWeatherForecast();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.cityName]);
 
-  render() {
-    return (
-      <Card>
-        <Card.Img variant="top" src="meteoimg.png" alt="meteo img" />
-        <Card.Body>
-          <Card.Title>
-            <h1>
-              {this.state.weatherObj.name} -{" "}
-              {this.state.weatherObj.sys && this.state.weatherObj.sys.country}
-            </h1>
-          </Card.Title>
-          <Card.Text>
-            <div>
-              Temperatura:{" "}
-              {this.state.weatherObj.main && this.state.weatherObj.main.temp}
-            </div>
-            <div>
-              Temperatura Massima:{" "}
-              {this.state.weatherObj.main &&
-                this.state.weatherObj.main.temp_max}{" "}
-            </div>
-            <div>
-              Temperatura Minima:{" "}
-              {this.state.weatherObj.main &&
-                this.state.weatherObj.main.temp_min}{" "}
-            </div>
-            <div>
-              Umidità:{" "}
-              {this.state.weatherObj.main &&
-                this.state.weatherObj.main.humidity}{" "}
-              - Pressione:{" "}
-              {this.state.weatherObj.main &&
-                this.state.weatherObj.main.pressure}{" "}
-            </div>
-          </Card.Text>
-          <h2 className="fw-bold">
-            {" "}
-            {this.state.weatherObj.weather &&
-              this.state.weatherObj.weather[0].main}
-          </h2>
-        </Card.Body>
-      </Card>
-    );
-  }
-}
+  return (
+    <Card>
+      <Card.Img variant="top" src="meteoimg.png" alt="meteo img" />
+      <Card.Body>
+        <Card.Title>
+          <h1>
+            {weather.name} - {weather.sys && weather.sys.country}
+          </h1>
+        </Card.Title>
+        <Card.Text>
+          <div>Temperatura: {weather.main && weather.main.temp}</div>
+          <div>
+            Temperatura Massima: {weather.main && weather.main.temp_max}{" "}
+          </div>
+          <div>
+            Temperatura Minima: {weather.main && weather.main.temp_min}{" "}
+          </div>
+          <div>
+            Umidità: {weather.main && weather.main.humidity} - Pressione:{" "}
+            {weather.main && weather.main.pressure}{" "}
+          </div>
+        </Card.Text>
+        <h2 className="fw-bold">
+          {" "}
+          {weather.weather && weather.weather[0].main}
+        </h2>
+      </Card.Body>
+    </Card>
+  );
+};
 
 export default CityDetails;
